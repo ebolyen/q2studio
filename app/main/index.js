@@ -1,6 +1,6 @@
-import path from 'path';
-import url from 'url';
 import { app, BrowserWindow } from 'electron';
+
+import getRoute from 'q2studio-main/routing';
 
 
 
@@ -13,17 +13,7 @@ const createWindow = () => {
 
     let mainPage;
 
-    if (process.env.NODE_ENV === 'development') {
-        mainPage = `${HMR_ORIGIN}/window/main.html`;
-    } else {
-        mainPage = url.format({
-            pathname: path.resolve(__dirname, './window/main.html'),
-            protocol: 'file:',
-            slashes: true
-        });
-    }
-
-    mainWindow.loadURL(mainPage);
+    mainWindow.loadURL(getRoute('window/main.html'));
 
     mainWindow.on('closed', () => {
         mainWindow = null;

@@ -86,7 +86,6 @@ const rendererConfig = {
         // overwritten for each entry-point)
         filename: 'js/[name].js',
         path: path.resolve(__dirname, '../dist/window'),
-        publicPath: '/window/' // needed for dev-server hmr
     },
 }
 
@@ -108,7 +107,11 @@ const rendererDevConfig = {
     plugins: [
         ...rendererConfig.plugins,
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    output: {
+        ...rendererConfig.output,
+        publicPath: '/window/' // needed for dev-server hmr
+    }
 }
 
 
