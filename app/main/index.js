@@ -14,7 +14,7 @@ const createWindow = () => {
     let mainPage;
 
     if (process.env.NODE_ENV === 'development') {
-        mainPage = 'http://localhost:9090/window/main.html';
+        mainPage = `${HMR_ORIGIN}/window/main.html`;
     } else {
         mainPage = url.format({
             pathname: path.resolve(__dirname, './window/main.html'),

@@ -11,10 +11,10 @@
   "scripts": {
     "build": "webpack --config config/webpack.config.babel.js",
     "start": "cross-env NODE_ENV=production electron dist/main.js",
-    "dev:main": "webpack --config config/webpack.config.babel.js --env.MAINONLY",
-    "dev:renderer": "webpack-dev-server --config config/webpack.config.babel.js --env.DEV",
+    "dev:main": "webpack --config config/webpack.config.babel.js --env.DEV_MAIN",
+    "dev:renderer": "webpack-dev-server --config config/webpack.config.babel.js --env.DEV_RENDERER",
     "dev:start": "sleep 4 && cross-env NODE_ENV=development electron dist/main.js",
-    "dev": "npm run dev:main && concurrently -k \"npm run dev:start\" \"npm run dev:renderer\""
+    "dev": "npm run dev:main && concurrently -k \"npm run dev:start\" \"npm run dev:renderer\" || true"
   },
   "dependencies": {
     "babel-core": "^6.25.0",
