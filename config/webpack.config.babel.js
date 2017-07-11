@@ -1,5 +1,7 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import webpack from 'webpack';
+import _ from 'lodash';
 
 const config = {
     // disable node polyfill, electron has everything and it changes __dirname
@@ -28,16 +30,16 @@ const config = {
 
 const renderEntry = {
     // Each of these is a seperate bundle
-    'main': './app/renderer/window/main/index.jsx',
-    'action': './app/renderer/window/action/index.jsx',
-    'job': './app/renderer/window/action/index.jsx',
-    'result': './app/renderer/window/result/index.jsx'
+    'main': 'q2studio/window/main',
+    'action': 'q2studio/window/action',
+    'job': 'q2studio/window/job',
+    'result': 'q2studio/window/result'
 }
 
 // only render chunks need an html page (they become electron windows)
 const htmlPlugins = Object.keys(renderEntry).map(
     (chunkName) => new HtmlWebpackPlugin({
-        chunks: [chunkName],
+        chunks: [chunkName, 'shared'],
         template: path.resolve(__dirname, '../app/renderer/template.html'),
         // Just use main.html, action.html, job.html, etc
         filename: `${chunkName}.html`
@@ -48,14 +50,19 @@ const rendererConfig = {
     target: 'electron-renderer',
     plugins: [
         ...config.plugins,
-        ...htmlPlugins
+        ...htmlPlugins,
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'shared',
+            filename: 'js/shared.js'
+        })
     ],
     entry: renderEntry,
     output: {
         // [name] is the key used in `entry` (without selector, file would be
         // overwritten for each entry-point)
         filename: 'js/[name].js',
-        path: path.resolve(__dirname, '../dist/window')
+        path: path.resolve(__dirname, '../dist/window'),
+        publicPath: '/window/' // needed for dev-server
     },
 }
 
@@ -63,7 +70,7 @@ const mainConfig = {
     ...config,
     target: 'electron-main',
     entry: {
-        'main': './app/main/main.js'
+        'main': 'q2studio-main'
     },
     output: {
         filename: 'main.js',
@@ -71,4 +78,34 @@ const mainConfig = {
     }
 }
 
-export default [ mainConfig, rendererConfig ];
+const port = 9090;
+const devConfig = {
+    ...rendererConfig,
+    entry: _.mapValues(renderEntry, 
+        v => [
+            v, // append hmr code to each entry-point
+            'webpack/hot/only-dev-server', 
+            `webpack-dev-server/client?http://localhost:${port}`
+        ]
+    ),
+    devServer: {
+        contentBase: path.resolve(__dirname, '../dist'),
+        inline: true,
+        port
+    },
+    plugins: [
+        ...rendererConfig.plugins,
+        new webpack.HotModuleReplacementPlugin()
+    ]
+}
+
+
+export default (env = {}) => {
+    if (env.MAINONLY !== undefined) {
+        return mainConfig;
+    } else if (env.DEV !== undefined) {
+        return devConfig;
+    } else {
+        return [mainConfig, rendererConfig];
+    }
+}

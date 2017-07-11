@@ -3,17 +3,27 @@ import url from 'url';
 import { app, BrowserWindow } from 'electron';
 
 
+
 let mainWindow = null;
-console.log(__dirname);
 
 const createWindow = () => {
-    mainWindow = new BrowserWindow({ width: 800, height: 600 });
 
-    mainWindow.loadURL(url.format({
-        pathname: path.resolve(__dirname, './window/main.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    mainWindow = new BrowserWindow({ width: 800, height: 600 });
+    mainWindow.toggleDevTools();
+
+    let mainPage;
+
+    if (process.env.NODE_ENV === 'development') {
+        mainPage = 'http://localhost:9090/window/main.html';
+    } else {
+        mainPage = url.format({
+            pathname: path.resolve(__dirname, './window/main.html'),
+            protocol: 'file:',
+            slashes: true
+        });
+    }
+
+    mainWindow.loadURL(mainPage);
 
     mainWindow.on('closed', () => {
         mainWindow = null;
