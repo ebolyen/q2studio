@@ -9,11 +9,11 @@
     "url": "git://github.com/qiime2/q2studio.git"
   },
   "scripts": {
-    "build": "webpack --config config/webpack.config.babel.js",
+    "build": "rm -rf dist && webpack --config frontend/config/webpack.config.babel.js",
     "start": "cross-env NODE_ENV=production electron dist/main.js",
-    "dev:main": "webpack --config config/webpack.config.babel.js --env.DEV_MAIN",
-    "dev:renderer": "webpack-dev-server --config config/webpack.config.babel.js --env.DEV_RENDERER",
-    "dev:start": "sleep 4 && cross-env NODE_ENV=development electron dist/main.js",
+    "dev:main": "webpack --config frontend/config/webpack.config.babel.js --env.DEV_MAIN",
+    "dev:renderer": "webpack-dev-server --config frontend/config/webpack.config.babel.js --env.DEV_RENDERER",
+    "dev:start": "sleep 4 && cross-env NODE_ENV=development electron dist/main.dev.js",
     "dev": "npm run dev:main && concurrently -k \"npm run dev:start\" \"npm run dev:renderer\" || true"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.0",
+    "electron-devtools-installer": "^2.2.0",
     "react-hot-loader": "^3.0.0-beta.7",
     "webpack-dev-server": "^2.5.1"
   },

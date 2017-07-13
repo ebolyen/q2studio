@@ -17,6 +17,7 @@ setup(
     license='BSD-3-Clause',
     url='https://qiime2.org',
     long_description=long_description,
-    packages=find_packages(),
+    packages=find_packages('backend'),
+    package_dir={'q2studio': 'backend/q2studio'},
     install_requires=['click', 'flask', 'gevent', 'qiime2 == 2017.7.*']
 )
