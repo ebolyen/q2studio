@@ -1,6 +1,7 @@
 {
   "name": "q2studio",
-  "version": "2017.7.0-dev0",
+  "version": "",
+  "private": true,
   "description": "A graphical user interface for QIIME 2.",
   "author": "QIIME 2 Development Team",
   "license": "BSD-3-Clause",
@@ -45,6 +46,5 @@
     "plugins": [
       "transform-object-rest-spread"
     ]
-  },
-  "private": true
+  }
 }

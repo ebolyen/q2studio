@@ -18,8 +18,8 @@ const sharedConfig = {
         // hoist app source as a importable module
         alias: { 
             'q2studio': path.resolve(__dirname, '../q2studio'),
-            'q2studio-main': path.resolve(__dirname, '../main'),
-            'q2studio-renderer': path.resolve(__dirname, '../renderer')
+            'q2studio-main': path.resolve(__dirname, '../q2studio-main'),
+            'q2studio-renderer': path.resolve(__dirname, '../q2studio-renderer')
         },
         // make these extensions optional when importing
         extensions: ['.js', '.jsx', '.json']
@@ -87,7 +87,7 @@ const rendererConfig = {
         ...Object.keys(rendererEntry).map(
             (chunkName) => new HtmlWebpackPlugin({
                 chunks: [chunkName, 'shared'],
-                template: path.resolve(__dirname, '../renderer/template.html'),
+                template: path.resolve(__dirname, '../q2studio-renderer/template.html'),
                 // Just use main.html, action.html, job.html, etc
                 filename: `${chunkName}.html`
             })),
